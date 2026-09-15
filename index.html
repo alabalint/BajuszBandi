@@ -1,0 +1,551 @@
+<title>Bajusz Bandi és a vasárnapi horgászat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+  :root{
+    --bg:#FBF3E7;
+    --paper:#FFFDF8;
+    --ink:#4A3728;
+    --ink-soft:#8A7860;
+    --accent:#C0392B;
+    --accent-2:#2F7A4F;
+    --gold:#E8A33D;
+    --line:#E9DCC6;
+    --shadow: 0 18px 40px -18px rgba(74,55,40,0.35);
+    --font-display:'Baloo 2', ui-rounded, 'Segoe UI', sans-serif;
+    --font-body:'Nunito', 'Segoe UI', sans-serif;
+
+    /* default gnome palette (Bandi) */
+    --suit-a:#C0392B;
+    --suit-b:#2F7A4F;
+    --hair:#B5451B;
+    --skin:#F3C9A0;
+    --nose:#DD7A57;
+    --blush:#F0997A;
+    --shoe:#2F7A4F;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    padding-block: max(24px, env(safe-area-inset-top,0px)) max(32px, env(safe-area-inset-bottom,0px));
+    padding-left:16px;
+    padding-right:16px;
+    background-image:
+      radial-gradient(circle at 8% 12%, rgba(232,163,61,0.14), transparent 42%),
+      radial-gradient(circle at 92% 85%, rgba(47,122,79,0.10), transparent 40%);
+  }
+
+  .stagewrap{
+    max-width:640px;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+
+  .eyebrow{
+    text-align:center;
+    font-family:var(--font-display);
+    font-weight:600;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-size:0.78rem;
+    color:var(--accent-2);
+  }
+
+  .book{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:28px;
+    box-shadow:var(--shadow);
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .page-frame{ position:relative; }
+
+  .page{ display:flex; flex-direction:column; gap:0; }
+  .page[hidden]{ display:none; }
+
+  .illus{
+    margin:0;
+    border-radius:14px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#eee;
+  }
+  .illus svg{ display:block; width:100%; height:auto; aspect-ratio:600/420; }
+  .illus img{ display:block; width:100%; height:auto; }
+
+  .story-text{
+    padding:18px 10px 6px;
+    text-align:center;
+  }
+  .story-text h2{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:1.28rem;
+    margin:0 0 8px;
+    color:var(--accent);
+    text-wrap:balance;
+  }
+  .story-text p{
+    font-size:1.05rem;
+    line-height:1.6;
+    margin:0 auto;
+    max-width:52ch;
+    color:var(--ink);
+  }
+  .story-text p + p{ margin-top:10px; }
+
+  /* cover page */
+  .cover .story-text{ padding-top:14px; }
+  .cover h1{
+    font-family:var(--font-display);
+    font-weight:800;
+    font-size:1.7rem;
+    line-height:1.15;
+    margin:0 0 8px;
+    color:var(--accent);
+    text-wrap:balance;
+  }
+  .cover .subtitle{
+    font-family:var(--font-body);
+    font-weight:700;
+    font-size:1rem;
+    color:var(--ink-soft);
+    margin:0;
+  }
+
+  .controls{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+  }
+  .navbtn{
+    width:52px; height:52px;
+    border-radius:50%;
+    border:none;
+    background:var(--accent-2);
+    color:#fff;
+    font-size:1.3rem;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    box-shadow:0 8px 18px -8px rgba(47,122,79,0.6);
+    transition:transform 0.15s ease, opacity 0.15s ease;
+  }
+  .navbtn:hover:not(:disabled){ transform:translateY(-2px); }
+  .navbtn:active:not(:disabled){ transform:translateY(0); }
+  .navbtn:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+  .navbtn:disabled{ opacity:0.32; cursor:default; box-shadow:none; }
+
+  .dots{ display:flex; gap:7px; flex-wrap:wrap; justify-content:center; max-width:280px; }
+  .dot{
+    width:9px; height:9px; border-radius:50%;
+    background:var(--line);
+    border:none; padding:0; cursor:pointer;
+  }
+  .dot[aria-current="true"]{ background:var(--accent); transform:scale(1.3); }
+  .dot:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+
+  .pagenum{
+    text-align:center;
+    font-family:var(--font-display);
+    font-size:0.85rem;
+    color:var(--ink-soft);
+  }
+
+  footer.credit{
+    text-align:center;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    padding-top:2px;
+  }
+
+  @media (max-width:420px){
+    .cover h1{ font-size:1.4rem; }
+    .story-text h2{ font-size:1.12rem; }
+    .story-text p{ font-size:0.98rem; }
+    .navbtn{ width:46px; height:46px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .navbtn{ transition:none; }
+  }
+</style>
+
+<div class="stagewrap">
+  <p class="eyebrow">Bajusz Bandi történetei</p>
+
+  <div class="book">
+    <div class="page-frame">
+      <div class="pages">
+
+        <!-- PAGE 0: COVER -->
+        <section class="page cover" data-page="0">
+          <figure class="illus">
+            <img src="images/0oldal.png" alt="Bajusz Bandi, a vörösbajszú manó, zöld-piros csíkos ruhában, erdei gombák között" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h1>Bajusz Bandi és a vasárnapi horgászat</h1>
+            <p class="subtitle">Mese egy kedves manóról, aki a fal mögött lakik</p>
+          </div>
+        </section>
+
+        <!-- PAGE 1: ÉBREDÉS -->
+        <section class="page" data-page="1" hidden>
+          <figure class="illus">
+            <img src="images/1oldal.jpg" alt="Bandi az ágyában alszik pici szobájában a falban, gombaóra az éjjeliszekrényen" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>Ébredés</h2>
+            <p>A ház falában, egészen a kislány szobája mellett, lakik egy pici piros ajtó mögött Bajusz Bandi, a manó. Vasárnap reggel a gombaóra hármat csilingelt, mire Bandi résnyire nyitotta a szemét.</p>
+            <p>– Horgászni való idő van! – dünnyögte álmosan, és jó nagyot nyújtózott, mielőtt megpödörte hosszú, vörös bajuszát.</p>
+          </div>
+        </section>
+
+        <!-- PAGE 2: LEVÉL A POSTALÁDÁBAN -->
+        <section class="page" data-page="2" hidden>
+          <figure class="illus">
+            <img src="images/2oldal.jpg" alt="Bandi felöltözve a postaládánál áll, kezében Anti levele" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>Levél a postaládában</h2>
+            <p>Bandi felhúzta csíkos zöld-piros ruháját és zöld csizmáját, majd kimászott a piros ajtón. A postaládában egy pici levél várta: „Gyere horgászni a patakhoz! Ölel: Anti.”</p>
+            <p>Bandi elmosolyodott – Anti volt a testvére, és minden vasárnap együtt horgásztak.</p>
+          </div>
+        </section>
+
+        <!-- PAGE 3: A KONYHÁBAN -->
+        <section class="page" data-page="3" hidden>
+          <figure class="illus">
+            <img src="images/3oldal.jpg" alt="Bandi a pici konyhájában babot, hagymát és paradicsomot csomagol egy tarisznyába" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>A konyhában</h2>
+            <p>Útközben benézett a konyhájába, ami a nappali falában rejtőzött. Bekötött egy kis tarisznyát néhány szem babbal, egy csipetnyi hagymával és egy apró paradicsommal.</p>
+            <p>Hiszen a bab volt a kedvenc étele, és ez jó elemózsia egy hosszú délelőttre.</p>
+          </div>
+        </section>
+
+        <!-- PAGE 4: A KERTBEN -->
+        <section class="page" data-page="4" hidden>
+          <figure class="illus">
+            <img src="images/4oldal.jpg" alt="Bandi kisétál a kertbe, ahol a fűszálak magasabbak nála, és elindul a patak felé" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>A kertben</h2>
+            <p>Egy pici résen át kibújt a kertbe, ahol a fűszálak magasabbak voltak nála, mint a fák. Letette a kis fa létráját, majd fütyörészve vágott neki az ösvénynek.</p>
+            <p>Az ösvény egyenesen a csillogó patakhoz vezetett.</p>
+          </div>
+        </section>
+
+        <!-- PAGE 5: A PATAKPARTON -->
+        <section class="page" data-page="5" hidden>
+          <figure class="illus">
+            <img src="images/5oldal.jpg" alt="Bandi és Anti a patakparton ülnek egy-egy gombán, horgászbottal a kezükben, és köszöntik egymást" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>A patakparton</h2>
+            <p>A patak partján Anti már várta, kezében egy vékony gallyból és cérnából font horgászbottal. – Szia, Bandi! Jó fogást! – kiáltotta, és összekoccantották a horgászbotjaikat, ahogy máskor a poharaikat szokták.</p>
+            <p>Leültek egy-egy puha gombára, és bedobták a horgot.</p>
+          </div>
+        </section>
+
+        <!-- PAGE 6: VICCES FOGÁS -->
+        <section class="page" data-page="6" hidden>
+          <figure class="illus">
+            <img src="images/6oldal.jpg" alt="Bandi kihúz a vízből egy régi csizmát, mindketten nevetnek a fogáson" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>Vicces fogás</h2>
+            <p>Sokáig csendben ültek, csak a víz csobogott. Egyszer csak Bandi bottja meghajlott! Izgatottan húzta be a zsinórt – de csak egy régi, elhagyott kis csizma akadt rá.</p>
+            <p>Mindketten úgy nevettek, hogy majdnem legurultak a gombáról.</p>
+          </div>
+        </section>
+
+        <!-- PAGE 7: IGAZI HAL -->
+        <section class="page" data-page="7" hidden>
+          <figure class="illus">
+            <img src="images/7oldal.jpg" alt="Bandi örömmel a magasba emeli az apró ezüstös halat, amit kifogott" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>Igazi hal!</h2>
+            <p>Nem sokkal később Anti bottja is megrándult, aztán újra Bandié. Ezúttal valami apró és csillogó villant a víz alatt: egy icipici ezüstös hal!</p>
+            <p>– Fogtam egyet! Fogtam egyet! – ugrált örömében Bandi, a bajusza is vidáman táncolt.</p>
+          </div>
+        </section>
+
+        <!-- PAGE 8: A KEDVES DÖNTÉS -->
+        <section class="page" data-page="8" hidden>
+          <figure class="illus">
+            <img src="images/8oldal.jpg" alt="Bandi óvatosan visszaengedi a kis halat a patakba, Anti mellette figyeli mosolyogva" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>A kedves döntés</h2>
+            <p>A kis hal ijedten csapkodott a tenyerében. Bandi elnézte egy pillanatig, aztán Antira nézett. – Szerintem inkább hazavárja a családja – mondta, és óvatosan visszaengedte a halacskát a patakba.</p>
+            <p>A hal boldogan úszott tovább, Bandi szíve pedig ettől lett igazán elégedett.</p>
+          </div>
+        </section>
+
+        <!-- PAGE 9: HAZAFELÉ -->
+        <section class="page" data-page="9" hidden>
+          <figure class="illus">
+            <img src="images/9oldal.jpg" alt="Bandi és Anti alkonyatkor hazafelé sétálnak, szentjánosbogarak világítják meg az utat" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>Hazafelé</h2>
+            <p>Ahogy a nap lassan lebukott a fűszálak mögött, a testvérek elindultak hazafelé. Szentjánosbogarak gyulladtak ki köröttük, mint apró lámpások.</p>
+            <p>A fénybogarak mutatták az utat egészen a piros ajtóig.</p>
+          </div>
+        </section>
+
+        <!-- PAGE 10: OTTHON, ESTE -->
+        <section class="page" data-page="10" hidden>
+          <figure class="illus">
+            <img src="images/10oldal.jpg" alt="Bandi és Anti babot esznek otthon gyertyafénynél, majd Bandi elalszik az ágyában" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>Otthon, este</h2>
+            <p>Otthon Bandi babot főzött hagymával és paradicsommal, és Anti is vele vacsorázott. Jóllakottan, elégedetten dőlt be az ágyába, a kislány szobája melletti falban.</p>
+            <p>– Jó éjszakát, kedves olvasó, neked is! – suttogta még Bandi, mielőtt lehunyta a szemét.</p>
+            <p style="font-family:var(--font-display); color:var(--accent); font-weight:700; margin-top:14px;">Vége</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <nav class="controls">
+      <button id="prevBtn" class="navbtn" aria-label="Előző oldal">←</button>
+      <div class="dots" id="dots"></div>
+      <button id="nextBtn" class="navbtn" aria-label="Következő oldal">→</button>
+    </nav>
+    <p class="pagenum" id="pagenum" aria-live="polite">1. oldal / 11</p>
+  </div>
+
+</div>
+
+<!-- shared illustration defs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <clipPath id="bodyClip"><path d="M63,118 C50,140 48,168 56,188 C62,203 78,211 100,211 C122,211 138,203 144,188 C152,168 150,140 137,118 C122,109 78,109 63,118 Z"/></clipPath>
+    <clipPath id="hatClip"><path d="M100,-2 C64,6 44,32 44,56 L156,56 C156,32 136,6 100,-2 Z"/></clipPath>
+
+    <radialGradient id="coverGlow" cx="50%" cy="20%" r="80%">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- refined character: head, mustache, hat and torso -->
+    <g id="gnome-torso">
+      <path d="M63,118 C50,140 48,168 56,188 C62,203 78,211 100,211 C122,211 138,203 144,188 C152,168 150,140 137,118 C122,109 78,109 63,118 Z" fill="var(--suit-a)"/>
+      <g clip-path="url(#bodyClip)">
+        <rect x="46" y="132" width="108" height="12" fill="var(--suit-b)"/>
+        <rect x="46" y="152" width="108" height="12" fill="var(--suit-b)"/>
+        <rect x="46" y="172" width="108" height="12" fill="var(--suit-b)"/>
+        <rect x="46" y="192" width="108" height="12" fill="var(--suit-b)"/>
+      </g>
+      <path d="M63,118 C50,140 48,168 56,188 C62,203 78,211 100,211 C122,211 138,203 144,188 C152,168 150,140 137,118 C122,109 78,109 63,118 Z" fill="none" stroke="var(--ink)" stroke-width="3"/>
+      <path d="M84,109 Q100,101 116,109 L110,121 Q100,117 90,121 Z" fill="var(--suit-b)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/>
+      <circle cx="100" cy="150" r="4.5" fill="var(--gold)" stroke="var(--ink)" stroke-width="1.3"/>
+      <circle cx="100" cy="168" r="4.5" fill="var(--gold)" stroke="var(--ink)" stroke-width="1.3"/>
+      <circle cx="100" cy="186" r="4.5" fill="var(--gold)" stroke="var(--ink)" stroke-width="1.3"/>
+      <path d="M62,72 L46,58 L60,86 Z" fill="var(--skin)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M138,72 L154,58 L140,86 Z" fill="var(--skin)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/>
+      <circle cx="100" cy="70" r="44" fill="var(--skin)" stroke="var(--ink)" stroke-width="3"/>
+      <circle cx="70" cy="84" r="9" fill="var(--blush)" opacity="0.5"/>
+      <circle cx="130" cy="84" r="9" fill="var(--blush)" opacity="0.5"/>
+      <path d="M76,60 Q84,55 92,59" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M108,59 Q116,55 124,60" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round"/>
+      <ellipse cx="84" cy="64" rx="4.2" ry="5.2" fill="var(--ink)"/>
+      <ellipse cx="116" cy="64" rx="4.2" ry="5.2" fill="var(--ink)"/>
+      <circle cx="85.3" cy="61.5" r="1.4" fill="#fff"/>
+      <circle cx="117.3" cy="61.5" r="1.4" fill="#fff"/>
+      <circle cx="100" cy="75" r="7.5" fill="var(--nose)" stroke="var(--ink)" stroke-width="1.8"/>
+      <g fill="none" stroke="var(--ink)" stroke-width="12" stroke-linecap="round">
+        <path d="M97,92 C80,99 63,96 55,84"/>
+        <path d="M55,84 C48,75 52,66 61,68 C68,70 68,79 59,81"/>
+        <path d="M103,92 C120,99 137,96 145,84"/>
+        <path d="M145,84 C152,75 148,66 139,68 C132,70 132,79 141,81"/>
+        <path d="M97,92 Q100,97 103,92"/>
+      </g>
+      <g fill="none" stroke="var(--hair)" stroke-width="8.5" stroke-linecap="round">
+        <path d="M97,92 C80,99 63,96 55,84"/>
+        <path d="M55,84 C48,75 52,66 61,68 C68,70 68,79 59,81"/>
+        <path d="M103,92 C120,99 137,96 145,84"/>
+        <path d="M145,84 C152,75 148,66 139,68 C132,70 132,79 141,81"/>
+        <path d="M97,92 Q100,97 103,92"/>
+      </g>
+      <path d="M100,-2 C64,6 44,32 44,56 L156,56 C156,32 136,6 100,-2 Z" fill="var(--suit-a)"/>
+      <g clip-path="url(#hatClip)">
+        <rect x="38" y="14" width="130" height="8" fill="var(--suit-b)"/>
+        <rect x="38" y="32" width="130" height="8" fill="var(--suit-b)"/>
+      </g>
+      <path d="M100,-2 C64,6 44,32 44,56 L156,56 C156,32 136,6 100,-2 Z" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M116,2 C144,-6 164,10 158,25 C153,36 138,31 139,19 C140,10 129,4 116,2 Z" fill="var(--suit-a)" stroke="var(--ink)" stroke-width="2.3" stroke-linejoin="round"/>
+      <circle cx="150" cy="18" r="6" fill="var(--gold)" stroke="var(--ink)" stroke-width="1.5"/>
+    </g>
+
+    <!-- reusable limbs, parameterised by the same CSS custom properties -->
+    <g id="legs-stand">
+      <rect x="70" y="203" width="17" height="33" rx="8.5" fill="var(--suit-a)" stroke="var(--ink)" stroke-width="2.3"/>
+      <rect x="113" y="203" width="17" height="33" rx="8.5" fill="var(--suit-b)" stroke="var(--ink)" stroke-width="2.3"/>
+      <ellipse cx="76" cy="240" rx="15" ry="8" fill="var(--shoe)" stroke="var(--ink)" stroke-width="2"/>
+      <circle cx="64" cy="235" r="4" fill="var(--shoe)" stroke="var(--ink)" stroke-width="1.4"/>
+      <ellipse cx="124" cy="240" rx="15" ry="8" fill="var(--shoe)" stroke="var(--ink)" stroke-width="2"/>
+      <circle cx="136" cy="235" r="4" fill="var(--shoe)" stroke="var(--ink)" stroke-width="1.4"/>
+    </g>
+
+    <g id="arm-down-L">
+      <path d="M62,120 C48,134 44,158 50,180" fill="none" stroke="var(--ink)" stroke-width="17" stroke-linecap="round"/>
+      <path d="M62,120 C48,134 44,158 50,180" fill="none" stroke="var(--suit-a)" stroke-width="14" stroke-linecap="round"/>
+      <circle cx="50" cy="182" r="8" fill="var(--skin)" stroke="var(--ink)" stroke-width="2"/>
+    </g>
+    <g id="arm-down-R">
+      <path d="M138,120 C152,134 156,158 150,180" fill="none" stroke="var(--ink)" stroke-width="17" stroke-linecap="round"/>
+      <path d="M138,120 C152,134 156,158 150,180" fill="none" stroke="var(--suit-a)" stroke-width="14" stroke-linecap="round"/>
+      <circle cx="150" cy="182" r="8" fill="var(--skin)" stroke="var(--ink)" stroke-width="2"/>
+    </g>
+    <g id="arm-wave-R">
+      <path d="M138,120 C158,106 163,76 152,54" fill="none" stroke="var(--ink)" stroke-width="17" stroke-linecap="round"/>
+      <path d="M138,120 C158,106 163,76 152,54" fill="none" stroke="var(--suit-a)" stroke-width="14" stroke-linecap="round"/>
+      <circle cx="150" cy="52" r="8" fill="var(--skin)" stroke="var(--ink)" stroke-width="2"/>
+    </g>
+    <g id="arm-fish-R">
+      <path d="M138,120 C160,108 174,98 175,88" fill="none" stroke="var(--ink)" stroke-width="17" stroke-linecap="round"/>
+      <path d="M138,120 C160,108 174,98 175,88" fill="none" stroke="var(--suit-a)" stroke-width="14" stroke-linecap="round"/>
+      <circle cx="176" cy="88" r="8" fill="var(--skin)" stroke="var(--ink)" stroke-width="2"/>
+    </g>
+    <g id="arm-joy-R">
+      <path d="M138,120 C156,90 152,50 141,24" fill="none" stroke="var(--ink)" stroke-width="17" stroke-linecap="round"/>
+      <path d="M138,120 C156,90 152,50 141,24" fill="none" stroke="var(--suit-a)" stroke-width="14" stroke-linecap="round"/>
+      <circle cx="140" cy="22" r="8" fill="var(--skin)" stroke="var(--ink)" stroke-width="2"/>
+    </g>
+    <g id="arm-joy-L">
+      <path d="M62,120 C44,90 48,50 59,24" fill="none" stroke="var(--ink)" stroke-width="17" stroke-linecap="round"/>
+      <path d="M62,120 C44,90 48,50 59,24" fill="none" stroke="var(--suit-a)" stroke-width="14" stroke-linecap="round"/>
+      <circle cx="60" cy="22" r="8" fill="var(--skin)" stroke="var(--ink)" stroke-width="2"/>
+    </g>
+    <g id="arm-carry-R">
+      <path d="M138,120 C150,148 136,172 114,186" fill="none" stroke="var(--ink)" stroke-width="17" stroke-linecap="round"/>
+      <path d="M138,120 C150,148 136,172 114,186" fill="none" stroke="var(--suit-a)" stroke-width="14" stroke-linecap="round"/>
+      <circle cx="113" cy="188" r="8" fill="var(--skin)" stroke="var(--ink)" stroke-width="2"/>
+    </g>
+    <g id="arm-carry-L">
+      <path d="M62,120 C50,148 64,172 86,186" fill="none" stroke="var(--ink)" stroke-width="17" stroke-linecap="round"/>
+      <path d="M62,120 C50,148 64,172 86,186" fill="none" stroke="var(--suit-a)" stroke-width="14" stroke-linecap="round"/>
+      <circle cx="87" cy="188" r="8" fill="var(--skin)" stroke="var(--ink)" stroke-width="2"/>
+    </g>
+
+    <g id="rod">
+      <line x1="0" y1="0" x2="46" y2="-58" stroke="#8B5A2B" stroke-width="5" stroke-linecap="round"/>
+      <path d="M46,-58 Q64,80 40,130" stroke="var(--ink)" stroke-width="1.5" fill="none"/>
+      <circle cx="38" cy="132" r="6" fill="var(--accent)" stroke="var(--ink)" stroke-width="1.5"/>
+    </g>
+    <g id="boot-prop">
+      <path d="M0,0 L28,0 L30,30 Q30,44 16,44 Q4,44 4,30 Z" fill="#5C3A22" stroke="var(--ink)" stroke-width="2"/>
+      <rect x="-2" y="-6" width="34" height="10" rx="3" fill="#5C3A22" stroke="var(--ink)" stroke-width="2"/>
+    </g>
+    <g id="fish-prop">
+      <ellipse cx="0" cy="0" rx="20" ry="10" fill="#BFE0E6" stroke="var(--ink)" stroke-width="2"/>
+      <path d="M18,0 L30,-8 L30,8 Z" fill="#8FCBDA" stroke="var(--ink)" stroke-width="1.5" stroke-linejoin="round"/>
+      <circle cx="-8" cy="-2" r="2" fill="var(--ink)"/>
+    </g>
+    <g id="pouch-prop">
+      <path d="M-20,0 Q20,28 60,0 L54,48 Q20,62 -14,48 Z" fill="#D9B26B" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>
+      <circle cx="6" cy="14" r="5" fill="#8B5A2B" stroke="var(--ink)" stroke-width="1.3"/>
+      <circle cx="20" cy="18" r="5" fill="var(--accent)" stroke="var(--ink)" stroke-width="1.3"/>
+      <circle cx="34" cy="14" r="5" fill="#F3E2C4" stroke="var(--ink)" stroke-width="1.3"/>
+    </g>
+
+    <g id="mushroom">
+      <rect x="-4" y="8" width="8" height="14" rx="3" fill="#FBF3E7" stroke="var(--ink)" stroke-width="1.5"/>
+      <ellipse cx="0" cy="4" rx="14" ry="10" fill="var(--accent)" stroke="var(--ink)" stroke-width="2"/>
+      <circle cx="-6" cy="1" r="2.2" fill="#FBF3E7"/>
+      <circle cx="5" cy="-1" r="2" fill="#FBF3E7"/>
+      <circle cx="0" cy="5" r="1.8" fill="#FBF3E7"/>
+    </g>
+
+    <g id="fern">
+      <path d="M0,30 Q-2,15 0,0" stroke="var(--accent-2)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M0,24 Q-10,20 -14,10 M0,20 Q10,16 14,6 M0,14 Q-9,10 -12,2 M0,10 Q8,7 11,0" stroke="var(--accent-2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </g>
+
+    <g id="star">
+      <path d="M0,-6 L1.6,-1.8 L6,-1.8 L2.6,1 L3.8,5.6 L0,3 L-3.8,5.6 L-2.6,1 L-6,-1.8 L-1.6,-1.8 Z" fill="#F3E7C9"/>
+    </g>
+
+    <circle id="firefly" r="2.6" fill="var(--gold)"/>
+
+    <g id="cloud">
+      <ellipse cx="0" cy="0" rx="26" ry="14" fill="#fff" opacity="0.8"/>
+      <ellipse cx="22" cy="-6" rx="18" ry="12" fill="#fff" opacity="0.8"/>
+      <ellipse cx="-20" cy="-4" rx="16" ry="10" fill="#fff" opacity="0.8"/>
+    </g>
+
+    <g id="sun-rays">
+      <g stroke="#FBDA9A" stroke-width="5" stroke-linecap="round">
+        <line x1="0" y1="-70" x2="0" y2="-88"/>
+        <line x1="0" y1="70" x2="0" y2="88"/>
+        <line x1="-70" y1="0" x2="-88" y2="0"/>
+        <line x1="70" y1="0" x2="88" y2="0"/>
+        <line x1="-50" y1="-50" x2="-62" y2="-62"/>
+        <line x1="50" y1="-50" x2="62" y2="-62"/>
+        <line x1="-50" y1="50" x2="-62" y2="62"/>
+        <line x1="50" y1="50" x2="62" y2="62"/>
+      </g>
+    </g>
+  </defs>
+</svg>
+
+<script>
+(function(){
+  var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
+  var total = pages.length;
+  var current = 0;
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  var dotsWrap = document.getElementById('dots');
+  var pagenum = document.getElementById('pagenum');
+
+  pages.forEach(function(_, i){
+    var d = document.createElement('button');
+    d.className = 'dot';
+    d.setAttribute('aria-label', (i+1) + '. oldal');
+    d.addEventListener('click', function(){ goTo(i); });
+    dotsWrap.appendChild(d);
+  });
+  var dots = Array.prototype.slice.call(dotsWrap.children);
+
+  function render(){
+    pages.forEach(function(p, i){ p.hidden = (i !== current); });
+    dots.forEach(function(d, i){ d.setAttribute('aria-current', i === current ? 'true' : 'false'); });
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    pagenum.textContent = (current + 1) + '. oldal / ' + total;
+  }
+
+  function goTo(i){
+    current = Math.max(0, Math.min(total - 1, i));
+    render();
+  }
+
+  prevBtn.addEventListener('click', function(){ goTo(current - 1); });
+  nextBtn.addEventListener('click', function(){ goTo(current + 1); });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowLeft') goTo(current - 1);
+    if (e.key === 'ArrowRight') goTo(current + 1);
+  });
+
+  render();
+})();
+</script>
