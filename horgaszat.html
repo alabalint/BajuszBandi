@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="hu"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bajusz Bandi és a vasárnapi horgászat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+  :root{
+    --bg:#FBF3E7;
+    --paper:#FFFDF8;
+    --ink:#4A3728;
+    --ink-soft:#8A7860;
+    --accent:#C0392B;
+    --accent-2:#2F7A4F;
+    --gold:#E8A33D;
+    --line:#E9DCC6;
+    --shadow: 0 18px 40px -18px rgba(74,55,40,0.35);
+    --font-display:'Baloo 2', ui-rounded, 'Segoe UI', sans-serif;
+    --font-body:'Nunito', 'Segoe UI', sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{ background:var(--bg); }
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    padding-block: max(24px, env(safe-area-inset-top,0px)) max(32px, env(safe-area-inset-bottom,0px));
+    padding-left:16px;
+    padding-right:16px;
+    background-image:
+      radial-gradient(circle at 8% 12%, rgba(232,163,61,0.14), transparent 42%),
+      radial-gradient(circle at 92% 85%, rgba(47,122,79,0.10), transparent 40%);
+  }
+
+  .stagewrap{
+    max-width:640px;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+
+  .eyebrow{
+    text-align:center;
+    font-family:var(--font-display);
+    font-weight:600;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-size:0.78rem;
+    color:var(--accent-2);
+    margin:0;
+  }
+
+  .topbar{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; }
+  .backlink{
+    justify-self:start;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:0.95rem;
+    color:var(--accent-2);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    white-space:nowrap;
+  }
+  .backlink:hover{ background:#fff; }
+  .backlink:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+
+  .book{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:28px;
+    box-shadow:var(--shadow);
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .page-frame{ position:relative; }
+
+  .page{ display:flex; flex-direction:column; gap:0; }
+  .page[hidden]{ display:none; }
+
+  .illus{
+    margin:0;
+    border-radius:14px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#eee;
+  }
+  .illus img{ display:block; width:100%; height:auto; }
+
+  .story-text{
+    padding:18px 10px 6px;
+    text-align:center;
+  }
+  .story-text h2{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:1.28rem;
+    margin:0 0 8px;
+    color:var(--accent);
+    text-wrap:balance;
+  }
+  .story-text p{
+    font-size:1.05rem;
+    line-height:1.6;
+    margin:0 auto;
+    max-width:52ch;
+    color:var(--ink);
+  }
+  .story-text p + p{ margin-top:10px; }
+
+  .cover .story-text{ padding-top:14px; }
+  .cover h1, .hero h1{
+    font-family:var(--font-display);
+    font-weight:800;
+    font-size:1.7rem;
+    line-height:1.15;
+    margin:0 0 8px;
+    color:var(--accent);
+    text-wrap:balance;
+  }
+  .cover .subtitle, .hero .subtitle{
+    font-family:var(--font-body);
+    font-weight:700;
+    font-size:1rem;
+    color:var(--ink-soft);
+    margin:0;
+  }
+
+  .controls{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+  }
+  .navbtn{
+    width:52px; height:52px;
+    border-radius:50%;
+    border:none;
+    background:var(--accent-2);
+    color:#fff;
+    font-size:1.3rem;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    box-shadow:0 8px 18px -8px rgba(47,122,79,0.6);
+    transition:transform 0.15s ease, opacity 0.15s ease;
+  }
+  .navbtn:hover:not(:disabled){ transform:translateY(-2px); }
+  .navbtn:active:not(:disabled){ transform:translateY(0); }
+  .navbtn:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+  .navbtn:disabled{ opacity:0.32; cursor:default; box-shadow:none; }
+
+  .dots{ display:flex; gap:7px; flex-wrap:wrap; justify-content:center; max-width:280px; }
+  .dot{
+    width:9px; height:9px; border-radius:50%;
+    background:var(--line);
+    border:none; padding:0; cursor:pointer;
+  }
+  .dot[aria-current="true"]{ background:var(--accent); transform:scale(1.3); }
+  .dot:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+
+  .pagenum{
+    text-align:center;
+    font-family:var(--font-display);
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    margin:0;
+  }
+
+  /* mesék választó */
+  .hero{ text-align:center; padding:8px 0 4px; }
+  .hero .eyebrow{ margin-bottom:6px; }
+  .hero h1{ font-size:2rem; }
+  .storylist{ display:flex; flex-direction:column; gap:18px; }
+  .storycard{
+    display:flex; flex-direction:column;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:28px;
+    box-shadow:var(--shadow);
+    padding:14px;
+    text-decoration:none;
+    color:var(--ink);
+    transition:transform 0.15s ease;
+  }
+  .storycard:hover{ transform:translateY(-3px); }
+  .storycard:focus-visible{ outline:3px solid var(--gold); outline-offset:3px; }
+  .storycard img{ display:block; width:100%; height:auto; aspect-ratio:4/3; object-fit:cover; object-position:center 62%; border-radius:14px; border:1px solid var(--line); }
+  .storycard-body{ display:flex; flex-direction:column; align-items:center; text-align:center; padding:14px 10px 6px; gap:4px; }
+  .storycard-num{
+    font-family:var(--font-display); font-weight:600; letter-spacing:0.08em; text-transform:uppercase;
+    font-size:0.75rem; color:var(--accent-2);
+  }
+  .storycard-title{
+    font-family:var(--font-display); font-weight:800; font-size:1.4rem; line-height:1.15;
+    color:var(--accent); text-wrap:balance;
+  }
+  .storycard-sub{ font-weight:700; font-size:0.95rem; color:var(--ink-soft); }
+
+  @media (min-width:700px){
+    .stagewrap:has(.storylist){ max-width:900px; }
+    .storylist{ display:grid; grid-template-columns:1fr 1fr; }
+  }
+
+  @media (max-width:420px){
+    .topbar .eyebrow{ font-size:0.68rem; letter-spacing:0.05em; }
+    .backlink{ font-size:0.85rem; padding:5px 10px; }
+    .cover h1{ font-size:1.4rem; }
+    .hero h1{ font-size:1.6rem; }
+    .story-text h2{ font-size:1.12rem; }
+    .story-text p{ font-size:0.98rem; }
+    .navbtn{ width:46px; height:46px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .navbtn, .storycard{ transition:none; }
+  }
+
+</style>
+</head><body><div class="stagewrap">
+  <div class="topbar"><a class="backlink" href="./">← Mesék</a><p class="eyebrow">Bajusz Bandi történetei</p><span class="topbar-spacer"></span></div>
+
+  <div class="book">
+    <div class="page-frame">
+      <div class="pages">
+
+        <section class="page cover" data-page="0">
+          <figure class="illus">
+            <img src="images/0oldal.jpg" alt="Bajusz Bandi és Anti a gombás erdei ajtajuk előtt ülnek, naplementében, a patak és egy messzi kastély a háttérben">
+          </figure>
+          <div class="story-text">
+            <h1>Bajusz Bandi és a vasárnapi horgászat</h1>
+            <p class="subtitle">Mese egy kedves manóról, aki a fal mögött lakik</p>
+          </div>
+        </section>
+
+        <section class="page" data-page="1" hidden>
+          <figure class="illus">
+            <img src="images/1oldal.jpg" alt="Bandi az ágyában alszik pici szobájában a falban, gombaóra az éjjeliszekrényen" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>Ébredés</h2>
+            <p>A ház falában, egészen a kislány szobája mellett, lakik egy pici piros ajtó mögött Bajusz Bandi, a manó. Vasárnap reggel a gombaóra hármat csilingelt, mire Bandi résnyire nyitotta a szemét.</p>
+            <p>– Horgászni való idő van! – dünnyögte álmosan, és jó nagyot nyújtózott, mielőtt megpödörte hosszú, vörös bajuszát.</p>
+          </div>
+        </section>
+
+        <section class="page" data-page="2" hidden>
+          <figure class="illus">
+            <img src="images/2oldal.jpg" alt="Bandi felöltözve a postaládánál áll, kezében Anti levele" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>Levél a postaládában</h2>
+            <p>Bandi felhúzta csíkos zöld-piros ruháját és zöld csizmáját, majd kimászott a piros ajtón. A postaládában egy pici levél várta: „Gyere horgászni a patakhoz! Ölel: Anti.”</p>
+            <p>Bandi elmosolyodott – Anti volt a testvére, és minden vasárnap együtt horgásztak.</p>
+          </div>
+        </section>
+
+        <section class="page" data-page="3" hidden>
+          <figure class="illus">
+            <img src="images/3oldal.jpg" alt="Bandi a pici konyhájában babot, hagymát és paradicsomot csomagol egy tarisznyába" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>A konyhában</h2>
+            <p>Útközben benézett a konyhájába, ami a nappali falában rejtőzött. Bekötött egy kis tarisznyát néhány szem babbal, egy csipetnyi hagymával és egy apró paradicsommal.</p>
+            <p>Hiszen a bab volt a kedvenc étele, és ez jó elemózsia egy hosszú délelőttre.</p>
+          </div>
+        </section>
+
+        <section class="page" data-page="4" hidden>
+          <figure class="illus">
+            <img src="images/4oldal.jpg" alt="Bandi kisétál a kertbe, ahol a fűszálak magasabbak nála, és elindul a patak felé" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>A kertben</h2>
+            <p>Egy pici résen át kibújt a kertbe, ahol a fűszálak magasabbak voltak nála, mint a fák. Letette a kis fa létráját, majd fütyörészve vágott neki az ösvénynek.</p>
+            <p>Az ösvény egyenesen a csillogó patakhoz vezetett.</p>
+          </div>
+        </section>
+
+        <section class="page" data-page="5" hidden>
+          <figure class="illus">
+            <img src="images/5oldal.jpg" alt="Bandi és Anti a patakparton ülnek egy-egy gombán, horgászbottal a kezükben, és köszöntik egymást" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>A patakparton</h2>
+            <p>A patak partján Anti már várta, kezében egy vékony gallyból és cérnából font horgászbottal. – Szia, Bandi! Jó fogást! – kiáltotta, és összekoccantották a horgászbotjaikat, ahogy máskor a poharaikat szokták.</p>
+            <p>Leültek egy-egy puha gombára, és bedobták a horgot.</p>
+          </div>
+        </section>
+
+        <section class="page" data-page="6" hidden>
+          <figure class="illus">
+            <img src="images/6oldal.jpg" alt="Bandi kihúz a vízből egy régi csizmát, mindketten nevetnek a fogáson" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>Vicces fogás</h2>
+            <p>Sokáig csendben ültek, csak a víz csobogott. Egyszer csak Bandi bottja meghajlott! Izgatottan húzta be a zsinórt – de csak egy régi, elhagyott kis csizma akadt rá.</p>
+            <p>Mindketten úgy nevettek, hogy majdnem legurultak a gombáról.</p>
+          </div>
+        </section>
+
+        <section class="page" data-page="7" hidden>
+          <figure class="illus">
+            <img src="images/7oldal.jpg" alt="Bandi örömmel a magasba emeli az apró ezüstös halat, amit kifogott" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>Igazi hal!</h2>
+            <p>Nem sokkal később Anti bottja is megrándult, aztán újra Bandié. Ezúttal valami apró és csillogó villant a víz alatt: egy icipici ezüstös hal!</p>
+            <p>– Fogtam egyet! Fogtam egyet! – ugrált örömében Bandi, a bajusza is vidáman táncolt.</p>
+          </div>
+        </section>
+
+        <section class="page" data-page="8" hidden>
+          <figure class="illus">
+            <img src="images/8oldal.jpg" alt="Bandi óvatosan visszaengedi a kis halat a patakba, Anti mellette figyeli mosolyogva" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>A kedves döntés</h2>
+            <p>A kis hal ijedten csapkodott a tenyerében. Bandi elnézte egy pillanatig, aztán Antira nézett. – Szerintem inkább hazavárja a családja – mondta, és óvatosan visszaengedte a halacskát a patakba.</p>
+            <p>A hal boldogan úszott tovább, Bandi szíve pedig ettől lett igazán elégedett.</p>
+          </div>
+        </section>
+
+        <section class="page" data-page="9" hidden>
+          <figure class="illus">
+            <img src="images/9oldal.jpg" alt="Bandi és Anti alkonyatkor hazafelé sétálnak, szentjánosbogarak világítják meg az utat" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>Hazafelé</h2>
+            <p>Ahogy a nap lassan lebukott a fűszálak mögött, a testvérek elindultak hazafelé. Szentjánosbogarak gyulladtak ki köröttük, mint apró lámpások.</p>
+            <p>A fénybogarak mutatták az utat egészen a piros ajtóig.</p>
+          </div>
+        </section>
+
+        <section class="page" data-page="10" hidden>
+          <figure class="illus">
+            <img src="images/10oldal.jpg" alt="Bandi és Anti babot esznek otthon gyertyafénynél, majd Bandi elalszik az ágyában" loading="lazy">
+          </figure>
+          <div class="story-text">
+            <h2>Otthon, este</h2>
+            <p>Otthon Bandi babot főzött hagymával és paradicsommal, és Anti is vele vacsorázott. Jóllakottan, elégedetten dőlt be az ágyába, a kislány szobája melletti falban.</p>
+            <p>– Jó éjszakát, kedves olvasó, neked is! – suttogta még Bandi, mielőtt lehunyta a szemét.</p>
+            <p style="font-family:var(--font-display); color:var(--accent); font-weight:700; margin-top:14px;">Vége</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <nav class="controls">
+      <button id="prevBtn" class="navbtn" aria-label="Előző oldal" disabled>←</button>
+      <div class="dots" id="dots"></div>
+      <button id="nextBtn" class="navbtn" aria-label="Következő oldal">→</button>
+    </nav>
+    <p class="pagenum" id="pagenum" aria-live="polite"></p>
+  </div>
+
+</div>
+<script>
+(function(){
+  var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
+  var total = pages.length;
+  var current = 0;
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  var dotsWrap = document.getElementById('dots');
+  var pagenum = document.getElementById('pagenum');
+
+  pages.forEach(function(_, i){
+    var d = document.createElement('button');
+    d.className = 'dot';
+    d.setAttribute('aria-label', (i+1) + '. oldal');
+    d.addEventListener('click', function(){ goTo(i); });
+    dotsWrap.appendChild(d);
+  });
+  var dots = Array.prototype.slice.call(dotsWrap.children);
+
+  function render(){
+    pages.forEach(function(p, i){ p.hidden = (i !== current); });
+    dots.forEach(function(d, i){ d.setAttribute('aria-current', i === current ? 'true' : 'false'); });
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    pagenum.textContent = (current + 1) + '. oldal / ' + total;
+  }
+
+  function goTo(i){
+    current = Math.max(0, Math.min(total - 1, i));
+    render();
+  }
+
+  prevBtn.addEventListener('click', function(){ goTo(current - 1); });
+  nextBtn.addEventListener('click', function(){ goTo(current + 1); });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowLeft') goTo(current - 1);
+    if (e.key === 'ArrowRight') goTo(current + 1);
+  });
+
+  // lapozás húzással (telefonon)
+  var sx = null, sy = null;
+  var frame = document.querySelector('.page-frame');
+  frame.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, {passive:true});
+  frame.addEventListener('touchend', function(e){
+    if (sx === null) return;
+    var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) goTo(current + (dx < 0 ? 1 : -1));
+    sx = null;
+  });
+
+  render();
+})();
+</script>
+</body></html>
